@@ -13,7 +13,7 @@ function Header({
     ...props
 }) {
     return (
-        <header className="dark relative z-50 bg-[rgb(0,0,0)] text-[rgb(255,255,255)] h-[72px] px-4 flex items-center justify-between">
+        <header className="dark relative z-50 w-full bg-[rgb(0,0,0)] text-[rgb(255,255,255)] h-[72px] px-4 flex items-center justify-between">
 
             <div className="flex flex-row items-center gap-5 mr-10">
                 <img src={LogoMark} alt="Logo mark" className="h-[64px] w-auto transition-transform duration-700 ease-out hover:rotate-[360deg] hover:ease-in-out"/>
