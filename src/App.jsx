@@ -1,35 +1,47 @@
 import './App.css'
-import { Button } from './components/ui/button';
-import { Card, CardAction, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from './components/ui/card';
+import MainPage from './pages/MainPage'
+import OnTheRunPage from './pages/OnTheRunPage'
+import LateReportPage from './pages/LateReportPage'
+import SearchLinePage from './pages/SearchLinePage'
+import LineInfoPage from './pages/LineInfoPage'
+import GeneralMapPage from './pages/GeneralMapPage'
+import { Routes, Route } from 'react-router'
 
 function App() {	
 	return (
 		<div className='w-full flex flex-col justify-center items-center'>
-			<Card className="w-full max-w-sm">
-				<CardHeader>
-					<CardTitle>Login to your account</CardTitle>
-					<CardDescription>
-					Enter your email below to login to your account
-					</CardDescription>
-					<CardAction>
-					<Button variant="link">Sign Up</Button>
-					</CardAction>
-				</CardHeader>
-				<CardContent>
-					Conteúdo do card
-				</CardContent>
-				<CardFooter className="flex-col gap-2">
-					<Button type="submit" className="w-full">
-					Login
-					</Button>
-					<Button variant="outline" className="w-full">
-					Login with Google
-					</Button>
-				</CardFooter>
-			</Card>
-			<Button>
-				Isto é um botão
-			</Button>
+
+			<div className='w-full h-32 flex flex-row justify-center items-center bg-orange-500'>
+				BRSP
+			</div>
+			<main className='w-full flex flex-col justify-center items-center'>
+				<Routes>como remover todos 
+					<Route
+						path='/'
+						element={<MainPage />}
+					/>
+					<Route
+						path='/ontherun'
+						element={<OnTheRunPage />}
+					/>
+					<Route
+						path='/latereport'
+						element={<LateReportPage />}
+					/>
+					<Route
+						path='/searchline'
+						element={<SearchLinePage />}
+					/>
+					<Route
+						path='/lineinfo'
+						element={<LineInfoPage />}
+					/>
+					<Route
+						path='/generalmap'
+						element={<GeneralMapPage />}
+					/>
+				</Routes>
+			</main>
 		</div>
 	)
 }
