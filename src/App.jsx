@@ -6,14 +6,13 @@ import SearchLinePage from './pages/SearchLinePage'
 import LineInfoPage from './pages/LineInfoPage'
 import GeneralMapPage from './pages/GeneralMapPage'
 import { Routes, Route } from 'react-router'
+import { Header } from './components/ui/header'
 
 function App() {	
 	return (
 		<div className='w-full flex flex-col justify-center items-center'>
 
-			<div className='w-full h-32 flex flex-row justify-center items-center bg-orange-500'>
-				BRSP
-			</div>
+      <Header />
 			<main className='w-full flex flex-col justify-center items-center'>
 				<Routes>como remover todos 
 					<Route
