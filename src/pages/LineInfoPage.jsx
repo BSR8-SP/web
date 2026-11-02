@@ -169,23 +169,25 @@ function TimeIntervalSelector() {
     };
 
     return (
-        <FieldGroup className="w-full flex flex-row items-center justify-center gap-3">
-                
-            <FieldLabel className="w-auto flex justify-center" htmlFor="time-interval-start">Início</FieldLabel>
+        <FieldGroup className="w-full flex flex-col items-center justify-center gap-3">
 
-            <TimeInput
-                id="time-interval-start"
-                value={time.start}
-                onChange={(time) => handleTimeChange("start", time)}
-            />
+            <div className='flex gap-4'>
+                <FieldLabel className="w-[40px] flex justify-center" htmlFor="time-interval-start">Início</FieldLabel>
+                <TimeInput
+                    id="time-interval-start"
+                    value={time.start}
+                    onChange={(time) => handleTimeChange("start", time)}
+                />
+            </div>
 
-            <FieldLabel className="w-auto flex justify-center" htmlFor="time-interval-end">Fim</FieldLabel>
-
-            <TimeInput
-                id="time-interval-end"
-                value={time.end}
-                onChange={(time) => handleTimeChange("end", time)}
-            />
+            <div className='flex gap-4'>
+                <FieldLabel className="w-[40px] flex justify-center" htmlFor="time-interval-end">Fim</FieldLabel>
+                <TimeInput
+                    id="time-interval-end"
+                    value={time.end}
+                    onChange={(time) => handleTimeChange("end", time)}
+                />
+            </div>
 
         </FieldGroup>
     )
@@ -343,12 +345,11 @@ function CommentsSection({ comments_list }) {
 
             {comments.map((comment) => (
                 <Card className='w-full' key={comment.id}>
-                    <CardHeader>
-                        <CardTitle>Card title</CardTitle>
-                    </CardHeader>
-                    <CardContent>
+                    <CardContent className="break-words">
+
                         {comment.content}
-                        <div className='flex justify-end'>
+
+                        <div className='flex justify-end mt-5'>
                             <Button
                                 variant='ghost'
                                 onClick={() => handleVote(comment.id, "upvote")}
@@ -370,6 +371,7 @@ function CommentsSection({ comments_list }) {
                                 <ThumbsDown/>
                             </Button>
                         </div>
+
                     </CardContent>
                 </Card>
             ))}
