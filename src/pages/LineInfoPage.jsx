@@ -295,26 +295,69 @@ function PieChartCard({ title, description, data_config, chart_data }) {
     )
 }
 
-function CommentsSection({ comments_list }) {
+function CommentsSection() {
+    const [votes, setVotes] = useState({});
+
+    const handleVote = (id, vote) => {
+        setVotes((prev) => ({
+            ...prev,
+            [id]: prev[id] === vote ? null : vote
+        }));
+    };
+
+    const [comments, setComments] = useState(mock_comments);
+    const [newComment, setNewComment] = useState("");
+
     return (
         <div className="w-full flex flex-col gap-3">
             <h1>Comentários</h1>
 
-            <Textarea placeholder='Escreva um comentário sobre a linha XXXX-XX - Lorem Ipsum...'></Textarea>
+            <Textarea
+                placeholder='Escreva um comentário sobre a linha XXXX-XX - Lorem Ipsum...'
+                value={newComment}
+                onChange={(e) => setNewComment(e.target.value)}
+            />
+
             <div className='flex justify-end'>
-                <Button>Comentar</Button>
+                <Button
+                    onClick={() => {
+                        if (!newComment.trim()) { return; }
+                        setComments((prev) => [newComment, ...prev]);
+                        setNewComment("");
+                    }}
+                >
+                    Comentar
+                </Button>
             </div>
 
-            {comments_list.map((item) => (
-                <Card className='w-full'>
+            {comments.map((item, index) => (
+                <Card className='w-full' key={index}>
                     <CardHeader>
                         <CardTitle>Card title</CardTitle>
                     </CardHeader>
                     <CardContent>
                         {item}
                         <div className='flex justify-end'>
-                            <Button variant='ghost'><ThumbsUp/></Button>
-                            <Button variant='ghost'><ThumbsDown/></Button>
+                            <Button
+                                variant='ghost'
+                                onClick={() => handleVote(index, "upvote")}
+                                className={votes[index] === "upvote"
+                                    ? "bg-primary text-primary-foreground hover:bg-primary/50"
+                                    : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
+                                }
+                            >
+                                <ThumbsUp/>
+                            </Button>
+                            <Button
+                                variant='ghost'
+                                onClick={() => handleVote(index, "downvote")}
+                                className={votes[index] === "downvote"
+                                    ? "bg-primary text-primary-foreground hover:bg-primary/50"
+                                    : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
+                                }
+                            >
+                                <ThumbsDown/>
+                            </Button>
                         </div>
                     </CardContent>
                 </Card>
