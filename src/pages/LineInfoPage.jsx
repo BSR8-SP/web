@@ -119,7 +119,11 @@ const busBreakdownPieChartConfig = {
 }
 
 // mock data
-const mock_comments = ["Comentário 1", "Comentário 2", "Comentário 3"]
+const mock_comments = [
+    { id: 1, content: "Comentário 1", upvotes: 0, downvotes: 0 },
+    { id: 2, content: "Comentário 2", upvotes: 0, downvotes: 0 },
+    { id: 3, content: "Comentário 3", upvotes: 0, downvotes: 0 }
+]
 
 
 
@@ -295,8 +299,10 @@ function PieChartCard({ title, description, data_config, chart_data }) {
     )
 }
 
-function CommentsSection() {
+function CommentsSection({ comments_list }) {
     const [votes, setVotes] = useState({});
+    const [comments, setComments] = useState(comments_list);
+    const [newComment, setNewComment] = useState("");
 
     const handleVote = (id, vote) => {
         setVotes((prev) => ({
@@ -304,9 +310,6 @@ function CommentsSection() {
             [id]: prev[id] === vote ? null : vote
         }));
     };
-
-    const [comments, setComments] = useState(mock_comments);
-    const [newComment, setNewComment] = useState("");
 
     return (
         <div className="w-full flex flex-col gap-3">
@@ -322,7 +325,15 @@ function CommentsSection() {
                 <Button
                     onClick={() => {
                         if (!newComment.trim()) { return; }
-                        setComments((prev) => [newComment, ...prev]);
+                        setComments((prev) => [
+                            {
+                                id: crypto.randomUUID(),
+                                content: newComment,
+                                upvotes: 0,
+                                downvotes: 0
+                            },
+                            ...prev
+                        ]);
                         setNewComment("");
                     }}
                 >
@@ -330,18 +341,18 @@ function CommentsSection() {
                 </Button>
             </div>
 
-            {comments.map((item, index) => (
-                <Card className='w-full' key={index}>
+            {comments.map((comment) => (
+                <Card className='w-full' key={comment.id}>
                     <CardHeader>
                         <CardTitle>Card title</CardTitle>
                     </CardHeader>
                     <CardContent>
-                        {item}
+                        {comment.content}
                         <div className='flex justify-end'>
                             <Button
                                 variant='ghost'
-                                onClick={() => handleVote(index, "upvote")}
-                                className={votes[index] === "upvote"
+                                onClick={() => handleVote(comment.id, "upvote")}
+                                className={votes[comment.id] === "upvote"
                                     ? "bg-primary text-primary-foreground hover:bg-primary/50"
                                     : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
                                 }
@@ -350,8 +361,8 @@ function CommentsSection() {
                             </Button>
                             <Button
                                 variant='ghost'
-                                onClick={() => handleVote(index, "downvote")}
-                                className={votes[index] === "downvote"
+                                onClick={() => handleVote(comment.id, "downvote")}
+                                className={votes[comment.id] === "downvote"
                                     ? "bg-primary text-primary-foreground hover:bg-primary/50"
                                     : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
                                 }
