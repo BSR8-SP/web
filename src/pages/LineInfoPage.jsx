@@ -4,11 +4,15 @@ import { Input } from "../components/ui/input"
 import { Field, FieldGroup, FieldLabel } from "../components/ui/field"
 import { Label } from "../components/ui/label"
 import { Button } from '../components/ui/button'
+import { Textarea } from "../components/ui/textarea"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/ui/tabs"
 import { Card, CardContent, CardDescription, CardHeader, CardFooter, CardTitle } from "../components/ui/card"
 import { ChartContainer, ChartTooltip, ChartTooltipContent, ChartLegend, ChartLegendContent } from "../components/ui/chart"
 
 import { Bar, BarChart, Pie, PieChart, CartesianGrid, XAxis } from "recharts"
+
+import { ThumbsDown, ThumbsUp } from "lucide-react"
+
 
 
 const day_of_the_week = [
@@ -285,6 +289,12 @@ function CommentsSection({ comments_list }) {
     return (
         <div className="w-full flex flex-col gap-3">
             <h1>Comentários</h1>
+
+            <Textarea placeholder='Escreva um comentário sobre a linha XXXX-XX - Lorem Ipsum...'></Textarea>
+            <div className='flex justify-end'>
+                <Button>Comentar</Button>
+            </div>
+
             {comments_list.map((item) => (
                 <Card className='w-full'>
                     <CardHeader>
@@ -293,8 +303,8 @@ function CommentsSection({ comments_list }) {
                     <CardContent>
                         {item}
                         <div className='flex justify-end'>
-                            <Button variant='ghost'>Upvote</Button>
-                            <Button variant='ghost'>Downvote</Button>
+                            <Button variant='ghost'><ThumbsUp/></Button>
+                            <Button variant='ghost'><ThumbsDown/></Button>
                         </div>
                     </CardContent>
                 </Card>
