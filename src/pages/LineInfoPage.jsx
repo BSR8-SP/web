@@ -13,6 +13,8 @@ import { Bar, BarChart, Pie, PieChart, CartesianGrid, XAxis } from "recharts"
 
 import { ThumbsDown, ThumbsUp } from "lucide-react"
 
+import { TimeInput } from '../components/ui/time-input'
+
 
 
 const day_of_the_week = [
@@ -143,34 +145,42 @@ function DayOfWeekDropdown() {
 
 function TimeIntervalSelector() {
 
-    const [value, setValue] = useState({
+    const [time, setTime] = useState({
         start: "00:00",
         end: "23:59",
     });
+
+    const toMinutes = (time) => {
+        const [hours, minutes] = time.split(":").map(Number);
+        return hours * 60 + minutes;
+    };
+
+    const handleTimeChange = (field, value) => {
+        const updatedTime = {...time, [field]: value};
+
+        if (field === "start" && toMinutes(value) > toMinutes(time.end)) { updatedTime.start = time.end; }
+        if (field === "end" && toMinutes(value) < toMinutes(time.start)) { updatedTime.end = time.start; }
+
+        setTime(updatedTime);
+    };
 
     return (
         <FieldGroup className="w-full flex flex-row items-center justify-center gap-3">
                 
             <FieldLabel className="w-auto flex justify-center" htmlFor="time-interval-start">Início</FieldLabel>
 
-            <Input
-                type="time"
+            <TimeInput
                 id="time-interval-start"
-                step="60"
-                value={value.start}
-                onChange={(e) => setValue((prev) => ({ ...prev, start: e.target.value }))}
-                className="w-auto appearance-none bg-background [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"
+                value={time.start}
+                onChange={(time) => handleTimeChange("start", time)}
             />
 
             <FieldLabel className="w-auto flex justify-center" htmlFor="time-interval-end">Fim</FieldLabel>
 
-            <Input
-                type="time"
+            <TimeInput
                 id="time-interval-end"
-                step="60"
-                value={value.end}
-                onChange={(e) => setValue((prev) => ({ ...prev, end: e.target.value }))}
-                className="w-auto appearance-none bg-background [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"
+                value={time.end}
+                onChange={(time) => handleTimeChange("end", time)}
             />
 
         </FieldGroup>
