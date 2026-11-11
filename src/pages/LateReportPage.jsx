@@ -27,7 +27,6 @@ function SubmitButton () {
 
 export default function LateReportPage() {
 
-
     // set of questions
     const questions = [
         "Qual opção melhor descreve a lotação dos ônibus neste trecho?",
@@ -37,9 +36,8 @@ export default function LateReportPage() {
         "Você já passou por algum incidente prejudicial à sua segurança e bem estar, ou já presenciou algo?",
         "Que tipo de situação você já presenciou ou passou?",
         "Qual opção melhor descreve a infraestrutura dos ônibus desta linha?",
-        "Os ônibus da linha são novos?",
-        "Os ônibus da linha têm ar condicionado?",
-        "Os ônibus da linha apresentam defeitos mecânicos ou outros defeitos?"
+        "Você gostaria de relatar algum problema de infraestrutura da linha?",
+        "Cite os problemas que considera existir na linha:",
     ];
 
     // options for question 1 - crowdedness
@@ -216,26 +214,35 @@ export default function LateReportPage() {
         }
     ];
 
-    // options for questions 8, 9 and 10 - infrastructure
+    // options for question 8 - infrastrucure part 1
     const options_infrastructure2 = [
         {
-            value: "todos",
-            title: "Todos",
+            value: "nao",
+            title: "Não",
             subtitle: ""
         },
         {
-            value: "alguns",
-            title: "Alguns",
+            value: "sim",
+            title: "Sim",
+            subtitle: ""
+        }
+    ];
+
+    // options for questions 9 - infrastructure problems
+    const options_infrastructure_problems = [
+        {
+            value: "ar_condicionado",
+            title: "Falta de ar condicionado",
             subtitle: ""
         },
         {
-            value: "nenhum",
-            title: "Nenhum",
+            value: "onibus_velhos",
+            title: "Ônibus velhos",
             subtitle: ""
         },
         {
-            value: "nao_responder",
-            title: "Não responder",
+            value: "defeitos",
+            title: "Ônibus com defeitos",
             subtitle: ""
         }
     ];
@@ -255,9 +262,8 @@ export default function LateReportPage() {
     const [incidents1, setIncidents1] = useState(options_incidents1[0].value) // question 5 - safety incidents
     const [incidents2, setIncidents2] = useState([]) // question 6 - types of safety incidents
     const [infrastructure1, setInfrastructure1] = useState(options_infrastructure1[0].value) // question 7 - infrastructure
-    const [newbuses, setNewbuses] = useState(options_infrastructure2[0].value) // question 8 - new buses
-    const [airconditioning, setAirconditioning] = useState(options_infrastructure2[0].value) // question 9 - air conditioning
-    const [defects, setDefects] = useState(options_infrastructure2[0].value) // question 10 - mechanical defects
+    const [infrastructure2, setInfrastructure2] = useState(options_infrastructure2[0].value) // question 8 - report infrastructure problems
+    const [infrastructureProblems, setInfrastructureProblems] = useState([]) // question 9 - types of infrastructure problems
 
 
     function handleSubmit(e) {
@@ -305,9 +311,8 @@ export default function LateReportPage() {
             incidents1,
             incidents2,
             infrastructure1,
-            newbuses,
-            airconditioning,
-            defects
+            infrastructure2,
+            infrastructureProblems
         };
     
         console.log("Respostas do formulário:", responses);
@@ -369,9 +374,11 @@ export default function LateReportPage() {
                     <Question type="checkbox" options={options_incidents2} selected={incidents2} onChange={setIncidents2} question={questions[5]} />
                 </div>
                 <Question type="radio" options={options_infrastructure1} selected={infrastructure1} onChange={setInfrastructure1} question={questions[6]} />
-                <Question type="radio" options={options_infrastructure2} selected={newbuses} onChange={setNewbuses} question={questions[7]} />
-                <Question type="radio" options={options_infrastructure2} selected={airconditioning} onChange={setAirconditioning} question={questions[8]} />
-                <Question type="radio" options={options_infrastructure2} selected={defects} onChange={setDefects} question={questions[9]} />
+                <Question type="radio" options={options_infrastructure2} selected={infrastructure2} onChange={setInfrastructure2} question={questions[7]} />
+                <div className={`transition-all duration-500
+                    ${infrastructure2 == "sim" ? 'max-h-[1000px] opacity-100' : 'max-h-[0px] pointer-events-none opacity-0'}`}>
+                    <Question type="checkbox" options={options_infrastructure_problems} selected={infrastructureProblems} onChange={setInfrastructureProblems} question={questions[8]} />
+                </div>
             </div>
             <SubmitButton />
             <WarningPopUp
