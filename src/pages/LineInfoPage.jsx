@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import { useComments } from "../hooks/useComments";
+
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue, } from "../components/ui/select"
 import { Input } from "../components/ui/input"
 import { Field, FieldGroup, FieldLabel } from "../components/ui/field"
@@ -117,13 +119,6 @@ const busBreakdownPieChartConfig = {
     sometimes: { label: "Às vezes",  color: "var(--chart-2)" },
     rarely:    { label: "Raramente",  color: "var(--chart-3)" }
 }
-
-// mock data
-const mock_comments = [
-    { id: 1, content: "Comentário 1", upvotes: 0, downvotes: 0 },
-    { id: 2, content: "Comentário 2", upvotes: 0, downvotes: 0 },
-    { id: 3, content: "Comentário 3", upvotes: 0, downvotes: 0 }
-]
 
 
 
@@ -301,16 +296,25 @@ function PieChartCard({ title, description, data_config, chart_data }) {
     )
 }
 
-function CommentsSection({ comments_list }) {
-    const [votes, setVotes] = useState({});
-    const [comments, setComments] = useState(comments_list);
+function CommentsSection({ bus_line_id }) {
     const [newComment, setNewComment] = useState("");
 
-    const handleVote = (id, vote) => {
-        setVotes((prev) => ({
-            ...prev,
-            [id]: prev[id] === vote ? null : vote
-        }));
+    const {
+        comments,
+        isLoading,
+        isCreating,
+        isInteracting,
+        error,
+        createComment,
+        interactWithComment
+    } = useComments(bus_line_id);
+
+    const handleSubmit = async () => {
+        if (!newComment.trim()) { return; }
+
+        const created = await createComment(newComment.trim());
+
+        if (created) { setNewComment(""); }
     };
 
     return (
@@ -325,50 +329,44 @@ function CommentsSection({ comments_list }) {
 
             <div className='flex justify-end'>
                 <Button
-                    onClick={() => {
-                        if (!newComment.trim()) { return; }
-                        setComments((prev) => [
-                            {
-                                id: crypto.randomUUID(),
-                                content: newComment,
-                                upvotes: 0,
-                                downvotes: 0
-                            },
-                            ...prev
-                        ]);
-                        setNewComment("");
-                    }}
+                    onClick={handleSubmit}
+                    disabled={isCreating || !newComment.trim()}
                 >
-                    Comentar
+                    {isCreating ? "Enviando..." : "Comentar"}
                 </Button>
             </div>
+
+            {error && (
+                <p className="text-destructive">{error}</p>
+            )}
+
+            {isLoading && <p>Carregando comentários...</p>}
+
+            {!isLoading && comments.length === 0 && (
+                <p>Nenhum comentário.</p>
+            )}
 
             {comments.map((comment) => (
                 <Card className='w-full' key={comment.id}>
                     <CardContent className="break-words">
 
-                        {comment.content}
+                        {comment.body}
 
                         <div className='flex justify-end mt-5'>
                             <Button
                                 variant='ghost'
-                                onClick={() => handleVote(comment.id, "upvote")}
-                                className={votes[comment.id] === "upvote"
-                                    ? "bg-primary text-primary-foreground hover:bg-primary/50"
-                                    : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
-                                }
+                                onClick={() => interactWithComment(comment.id, "positive")}
+                                disabled={isInteracting}
                             >
                                 <ThumbsUp/>
+                                {comment.interactions_positive}
                             </Button>
                             <Button
                                 variant='ghost'
-                                onClick={() => handleVote(comment.id, "downvote")}
-                                className={votes[comment.id] === "downvote"
-                                    ? "bg-primary text-primary-foreground hover:bg-primary/50"
-                                    : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
-                                }
+                                onClick={() => interactWithComment(comment.id, "negative")}
                             >
                                 <ThumbsDown/>
+                                {comment.interactions_negative}
                             </Button>
                         </div>
 
@@ -423,7 +421,7 @@ export default function LineInfoPage() {
                 />
             </div>
 
-            <CommentsSection comments_list={mock_comments}/>
+            <CommentsSection bus_line_id={"177H-10"}/>
         </div>
     )
 }
