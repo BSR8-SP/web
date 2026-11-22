@@ -14,7 +14,7 @@ function App() {
 
       <Header />
 			<main className='w-full flex flex-col justify-center items-center'>
-				<Routes>como remover todos 
+				<Routes>
 					<Route
 						path='/'
 						element={<MainPage />}
