@@ -6,12 +6,8 @@ import { ptBR } from "date-fns/locale"
 import { format } from "date-fns"
 import { TimeInput } from '../components/ui/time-input.jsx'
 import { Calendar } from "@/components/ui/calendar"
+import LateReportMap from '../components/map/LateReportMap.jsx'
 
-function MapMock() {
-    return (
-        <div className='bg-blue-600 w-[90%] h-[400px] text-white text-6xl text-center'> Insert Map here</div>
-    );
-}
 
 function SubmitButton () {
     return (
@@ -265,6 +261,12 @@ export default function LateReportPage() {
     const [infrastructure2, setInfrastructure2] = useState(options_infrastructure2[0].value) // question 8 - report infrastructure problems
     const [infrastructureProblems, setInfrastructureProblems] = useState([]) // question 9 - types of infrastructure problems
 
+    // map variables
+    const [line, setLine] = useState("");
+    const [direction, setDirection] = useState("");
+    const [start, setStart] = useState(null);
+    const [end, setEnd] = useState(null);
+
 
     function handleSubmit(e) {
         e.preventDefault();
@@ -322,7 +324,7 @@ export default function LateReportPage() {
 
     return(
         <form onSubmit={handleSubmit}
-              className='w-full flex flex-col justify-center items-center py-[50px]'>
+              className='w-full flex flex-col gap-2 justify-center items-center py-[50px]'>
             <div className='w-[90%] md:w-[700px] flex flex-col gap-6'>
 
 
@@ -357,7 +359,13 @@ export default function LateReportPage() {
                 </div>
             </div>
 
-            <MapMock />
+            <QuestionText text="Selecione a linha, sentido e trecho:" />
+            <LateReportMap
+                line={line} setLine={setLine}
+                direction={direction} setDirection={setDirection}
+                start={start} setStart={setStart}
+                end={end} setEnd={setEnd}
+            />
 
             <div className='w-[90%] md:w-[700px] flex flex-col gap-6'>
                 <Question type="radio" options={options_crowdedness} selected={crowdedness} onChange={setCrowdedness} question={questions[0]} />
@@ -365,7 +373,7 @@ export default function LateReportPage() {
                 <div className='flex flex-col items-center justify-center'>
                     <QuestionText text={questions[2]} />
                     <input type='number' value={travelTime} onChange={(t) => setTravelTime(t.target.value)} 
-                        className='bg-gray-100 rounded border border-black py-2 px-5 w-[90%]' />
+                        className='rounded-md border border-gray-300 bg-white text-gray-900 shadow-sm py-2 px-5 w-[90%]' />
                 </div>
                 <Question type="radio" options={options_safety} selected={safety} onChange={setSafety} question={questions[3]} />
                 <Question type="radio" options={options_incidents1} selected={incidents1} onChange={setIncidents1} question={questions[4]} />
