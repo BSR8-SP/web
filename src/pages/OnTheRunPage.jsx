@@ -1,13 +1,8 @@
-import QuestionText from '../components/ui/QuestionText.jsx'
 import Question from '../components/ui/Question.jsx'
 import WarningPopUp from '../components/ui/WarningPopUp.jsx'
 import { useState } from 'react'
+import LocationField from '../components/ui/LocationField.jsx'
 
-function MapMock() {
-    return (
-        <div className='bg-blue-600 w-[90%] h-[400px] text-white text-6xl text-center'> Insert Map here</div>
-    );
-}
 
 function SubmitButton () {
     return (
@@ -65,7 +60,8 @@ export default function OnTheRunPage() {
     const [warningText, setWarningText] = useState("");
 
     // variables for each question
-    const [location, setLocation] = useState("Av. Paulista, 1000 - São Paulo, SP")
+    const [location, setLocation] = useState("")
+    const [coords, setCoords] = useState(null)
     const [crowdedness, setCrowdedness] = useState(options_crowdedness[0].value) // question 1 - crowdedness
 
     function handleSubmit(e) {
@@ -90,7 +86,8 @@ export default function OnTheRunPage() {
         const responses = {
             location: {
                 type: locationType,
-                value: trimmedLocation
+                value: trimmedLocation,
+                coordinates: coords
             },
             crowdedness
         };
@@ -105,20 +102,21 @@ export default function OnTheRunPage() {
         <form onSubmit={handleSubmit}
               className='w-full flex flex-col justify-center items-center py-[50px]'>
 
-            <input
-                type="text"
-                value={location}
-                onChange={(e) => setLocation(e.target.value)}
-                placeholder="Digite um endereço ou CEP"
-                className="w-[90%] md:w-[700px] border border-gray-300 rounded-full py-3 my-5 px-5"
+            <LocationField
+                location={location}
+                setLocation={setLocation}
+                setCoords={setCoords}
             />
 
-            <MapMock />
+            {location && (
+                <>
+                    <div className='w-[90%] md:w-[700px] flex flex-col gap-6'>
+                        <Question type="radio" options={options_crowdedness} selected={crowdedness} onChange={setCrowdedness} question={questions[0]} />
+                    </div>
+                    <SubmitButton />
+                </>
+            )}
 
-            <div className='w-[90%] md:w-[700px] flex flex-col gap-6'>
-                <Question type="radio" options={options_crowdedness} selected={crowdedness} onChange={setCrowdedness} question={questions[0]} />
-            </div>
-            <SubmitButton />
             <WarningPopUp
                 text={warningText}
                 active={warningActive}
